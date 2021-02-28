@@ -58,11 +58,12 @@ def add_distance_to_route(route: List[Dict]):
     return (get_system_names(route), total_distance(route))
 
 
-def permute(head: Any, items: Iterable[Any]) -> List[Tuple[Any]]:
+def permute(head: Any, items: iter) -> iter:
     """
     Split permutation by the first element, a quick and dirty way of parallelizing the work.
     """
-    return [(head,) + permutation for permutation in itertools.permutations([item for item in items if item != head])]
+    for permutation in itertools.permutations(itertools.filterfalse(lambda x: x == head, items)):
+        yield (head,) + permutation
 
 
 def get_system_names(route: List[Dict]) -> List[str]:
@@ -80,12 +81,25 @@ def remove_reverse_routes(routes: List[List[Dict]]) -> List[List[Dict]]:
     return result
 
 
+def calc_shortest_bubble_run(head: Dict, systems: Iterable[Dict]):
+    shortest_route = None
+    for route in permute(head, systems):
+        distance = total_distance(route)
+        if not shortest_route or distance < shortest_route[1]:
+            shortest_route = (get_system_names(route), distance)
+    return shortest_route
+
+
 def calc_bubble_run(minor_faction: str):
     systems = get_local_minor_faction_systems(minor_faction)[:15:]  # Get first X systems as a test with systems[:X:]
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-        permuted_routes = itertools.chain.from_iterable(pool.map(functools.partial(permute, items=systems), systems))
-        permuted_forward_only_routes = remove_reverse_routes(permuted_routes)
-        routes_with_distance = pool.map(add_distance_to_route, permuted_forward_only_routes)
+    # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+    #     permuted_routes = itertools.chain.from_iterable(pool.map(functools.partial(permute, items=systems), systems))
+    #     permuted_forward_only_routes = remove_reverse_routes(permuted_routes)
+    #     routes_with_distance = pool.map(add_distance_to_route, permuted_forward_only_routes)
+    # sorted_routes_with_distance = sorted(routes_with_distance, key=lambda route: route[1])
+
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 1) as pool:
+        routes_with_distance = itertools.chain.from_iterable(pool.map(functools.partial(calc_shortest_bubble_run, systems=systems), systems))
     sorted_routes_with_distance = sorted(routes_with_distance, key=lambda route: route[1])
 
     # for route in sorted_routes_with_distance:
@@ -103,4 +117,4 @@ def calc_bubble_run(minor_faction: str):
 if __name__ == "__main__":
     MINOR_FACTION = "EDA Kunti League"
     calc_bubble_run(MINOR_FACTION)
-    # cProfile.run('calc_bubble_run(MINOR_FACTION)', 'stats')
+    # cProfile.run('calc_bubble_run(MINOR_FACTION)')
