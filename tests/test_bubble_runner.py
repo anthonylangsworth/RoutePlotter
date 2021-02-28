@@ -43,6 +43,14 @@ def test_get_system_names(route:List, expected_names:List):
 @pytest.mark.parametrize(
     "routes",
     [
+        (),
+        (
+            [{"name":"a"}, {"name":"b"}, {"name":"c"}],
+        ),
+        (
+            [{"name":"a"}, {"name":"b"}, {"name":"c"}],
+            [{"name":"a"}, {"name":"c"}, {"name":"b"}],
+        ),
         (
             [{"name":"a"}, {"name":"b"}, {"name":"c"}],
             [{"name":"a"}, {"name":"c"}, {"name":"b"}],
@@ -50,11 +58,6 @@ def test_get_system_names(route:List, expected_names:List):
             [{"name":"b"}, {"name":"c"}, {"name":"a"}],
             [{"name":"c"}, {"name":"a"}, {"name":"b"}],
             [{"name":"c"}, {"name":"b"}, {"name":"a"}]
-            # (
-            #     [{"name":"a"}, {"name":"b"}, {"name":"c"}],
-            #     [{"name":"a"}, {"name":"c"}, {"name":"b"}],
-            #     [{"name":"b"}, {"name":"a"}, {"name":"c"}],
-            # )
         ),
     ]
 )
