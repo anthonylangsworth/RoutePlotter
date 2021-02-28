@@ -32,11 +32,11 @@ def test_permute(desired_head, items, expected_results):
     "route, expected_names",
     [
         ([], []),
-        ([{"name":"foo"}], ["foo"]),
-        ([{"name":"a", "id":3}, {"name":"b"}, {"name":"c"}], ["a", "b", "c"]),
+        ([{"name": "foo"}], ["foo"]),
+        ([{"name": "a", "id": 3}, {"name": "b"}, {"name": "c"}], ["a", "b", "c"]),
     ]
 )
-def test_get_system_names(route:List, expected_names:List):
+def test_get_system_names(route: List, expected_names: List):
     assert get_system_names(route) == expected_names
 
 
@@ -45,23 +45,23 @@ def test_get_system_names(route:List, expected_names:List):
     [
         (),
         (
-            [{"name":"a"}, {"name":"b"}, {"name":"c"}],
+            [{"name": "a"}, {"name": "b"}, {"name": "c"}],
         ),
         (
-            [{"name":"a"}, {"name":"b"}, {"name":"c"}],
-            [{"name":"a"}, {"name":"c"}, {"name":"b"}],
+            [{"name": "a"}, {"name": "b"}, {"name": "c"}],
+            [{"name": "a"}, {"name": "c"}, {"name": "b"}],
         ),
         (
-            [{"name":"a"}, {"name":"b"}, {"name":"c"}],
-            [{"name":"a"}, {"name":"c"}, {"name":"b"}],
-            [{"name":"b"}, {"name":"a"}, {"name":"c"}],
-            [{"name":"b"}, {"name":"c"}, {"name":"a"}],
-            [{"name":"c"}, {"name":"a"}, {"name":"b"}],
-            [{"name":"c"}, {"name":"b"}, {"name":"a"}]
+            [{"name": "a"}, {"name": "b"}, {"name": "c"}],
+            [{"name": "a"}, {"name": "c"}, {"name": "b"}],
+            [{"name": "b"}, {"name": "a"}, {"name": "c"}],
+            [{"name": "b"}, {"name": "c"}, {"name": "a"}],
+            [{"name": "c"}, {"name": "a"}, {"name": "b"}],
+            [{"name": "c"}, {"name": "b"}, {"name": "a"}]
         ),
     ]
 )
-def test_remove_reverse_routes(routes:List[Dict]):
+def test_remove_reverse_routes(routes: List[Dict]):
     result = remove_reverse_routes(routes)
     routes_system_names = [get_system_names(route) for route in routes]
     result_system_names = [get_system_names(route) for route in result]
