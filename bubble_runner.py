@@ -55,7 +55,7 @@ def total_distance(route:iter) -> float:
 
 
 def add_distance_to_route(route:List[Dict]):
-    return ([system["name"] for system in route], total_distance(route))
+    return (get_system_names(route), total_distance(route))
 
 
 def permute(head:Any, items:Iterable[Any]) -> List[Tuple[Any]]:
@@ -65,14 +65,24 @@ def permute(head:Any, items:Iterable[Any]) -> List[Tuple[Any]]:
     return [(head,) + permutation for permutation in itertools.permutations([item for item in items if item != head])]
 
 
+def get_system_names(route:List[Dict]) -> List[str]:
+    return [system["name"] for system in route]
+
+
+def remove_reverse_routes(routes:List[List[Dict]]) -> List[List[Dict]]:
+    result = []
+    for route in routes:
+        if not get_system_names(route)[::-1] in [get_system_names(route) for route in result]:
+            result.append(route)
+    return result
+
+
 def calc_bubble_run(minor_faction:str):
     systems = get_local_minor_faction_systems(minor_faction)[:10:] # Get first X systems as a test with systems[:X:]
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
         permuted_routes = itertools.chain.from_iterable(pool.map(functools.partial(permute, items=systems), systems))
-        # permuted_routes = [route for route in itertools.permutations(systems) if route[0]["name"] < route[-1]["name"]] # Reverse routes are the same route
-        # TODO: Get rid of reversed routes
-
-        routes_with_distance = pool.map(add_distance_to_route, permuted_routes)
+        permuted_forward_only_routes = remove_reverse_routes(permuted_routes)
+        routes_with_distance = pool.map(add_distance_to_route, permuted_forward_only_routes)
     sorted_routes_with_distance = sorted(routes_with_distance, key = lambda route: route[1])
 
     # for route in sorted_routes_with_distance:
