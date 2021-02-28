@@ -71,9 +71,12 @@ def get_system_names(route:List[Dict]) -> List[str]:
 
 def remove_reverse_routes(routes:List[List[Dict]]) -> List[List[Dict]]:
     result = []
+    result_reversed_system_names = set()
     for route in routes:
-        if not get_system_names(route)[::-1] in [get_system_names(route) for route in result]:
+        system_names = get_system_names(route)
+        if not "\t".join(system_names) in result_reversed_system_names:
             result.append(route)
+            result_reversed_system_names.add("\t".join(system_names[::-1]))
     return result
 
 
