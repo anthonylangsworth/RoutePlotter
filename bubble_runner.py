@@ -54,8 +54,8 @@ def total_distance(route: iter) -> float:
     for system in route:
         if previous_system:
             total_distance += calc_distance(
-                (system["coords"]["x"], system["coords"]["y"], system["coords"]["x"]),
-                (previous_system["coords"]["x"], previous_system["coords"]["y"], previous_system["coords"]["x"]))
+                (system["coords"]["x"], system["coords"]["y"], system["coords"]["z"]),
+                (previous_system["coords"]["x"], previous_system["coords"]["y"], previous_system["coords"]["z"]))
         previous_system = system
     return total_distance
 
@@ -129,8 +129,8 @@ def find_longest_jump(route: List[Dict]) -> Tuple[Dict, Dict, float]:
     for system in route:
         if previous_system:
             distance = calc_distance(
-                (system["coords"]["x"], system["coords"]["y"], system["coords"]["x"]),
-                (previous_system["coords"]["x"], previous_system["coords"]["y"], previous_system["coords"]["x"]))
+                (system["coords"]["x"], system["coords"]["y"], system["coords"]["z"]),
+                (previous_system["coords"]["x"], previous_system["coords"]["y"], previous_system["coords"]["z"]))
             if not longest_jump or distance > longest_jump[2]:
                 longest_jump = (previous_system, system, distance)
         previous_system = system

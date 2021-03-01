@@ -7,5 +7,5 @@ It soon become clear that, for any non-trivial number of star systems (n > 5), t
 Therefore, the focus moved from creating an EDMC plug-in to plotting routes between stars in the most efficient way. It was also a good opportunity to large about Python's multiprocessing library and optimizations (e.g. using a string lookup in a `set` instead of a `list` lookup in a `list`).
 
 # Backlog
-1. Create a new version of itertools.permutations to create a "triangle" output.
+1. Create a new version of itertools.permutations to create a "triangle" output for the brute force version.
 2. Rename to "route plotter" or similar?

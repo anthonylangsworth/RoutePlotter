@@ -81,7 +81,7 @@ def test_remove_reverse_routes(routes: List[Dict]):
                 {"name": "Arun", "coords": {"x": 105.25, "y": -46.625, "z": -10.40625}}
             ],
             (
-                ["Antai", "Arun", "Wuy jugun"], 30.643931707329365
+                ["Antai", "Arun", "Wuy jugun"], 23.813512634832392
             )
         )
     ]
