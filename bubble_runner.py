@@ -112,23 +112,41 @@ def calc_distances(systems: Iterable[Dict]) -> Iterable[Tuple[int, int, float]]:
 
 
 def calc_shortest_route_mlrose(systems: Iterable[Dict]) -> Tuple[Dict, float]:
-    fitness_distance = mlrose.TravellingSales(distances=calc_distances(systems))
-    problem_fit = mlrose.TSPOpt(length=len(systems), fitness_fn=fitness_distance, maximize=False)
-    best_state, best_fitness = mlrose.genetic_alg(problem_fit, random_state=10)
+    # See https://mlrose.readthedocs.io/en/stable/source/tutorial2.html#
+    fitness_distances = mlrose.TravellingSales(distances=calc_distances(systems))
+    problem_fit = mlrose.TSPOpt(length=len(systems), fitness_fn=fitness_distances, maximize=False)
+    best_state, best_fitness = mlrose.genetic_alg(problem_fit, random_state=20, max_attempts=20)
     return ([systems[index] for index in best_state], best_fitness)
 
 
-def print_results(description: str, route_with_distance: Tuple[List[Dict], float]):
-    print(f"{ description }: {' -> '.join(get_system_names(route_with_distance[0]))}: {route_with_distance[1]} LY")
+def print_results(description: str, route: List[Dict], distance: float):
+    print(f"{ description }: {' -> '.join(get_system_names(route))}: {distance} LY")
+
+
+def find_longest_jump(route: List[Dict]) -> Tuple[Dict, Dict, float]:
+    longest_jump = None
+    previous_system = None
+    for system in route:
+        if previous_system:
+            distance = calc_distance(
+                (system["coords"]["x"], system["coords"]["y"], system["coords"]["x"]),
+                (previous_system["coords"]["x"], previous_system["coords"]["y"], previous_system["coords"]["x"]))
+            if not longest_jump or distance > longest_jump[2]:
+                longest_jump = (previous_system, system, distance)
+        previous_system = system
+    return longest_jump
 
 
 def calc_bubble_run(minor_faction: str):
-    systems = get_local_minor_faction_systems(minor_faction)[:3:]  # Get first X systems as a test with systems[:X:]
-    shortest_routes_with_distance_mlrose = calc_shortest_route_mlrose(systems)
-    print_results("mlrose", shortest_routes_with_distance_mlrose)
+    systems = get_local_minor_faction_systems(minor_faction)  # Get first X systems as a test with systems[:X:]
+    route, distance = calc_shortest_route_mlrose(systems)
+    print_results("mlrose", route, distance)
 
-    shortest_routes_with_distance_brute_force = calc_shortest_route_brute_force(systems)
-    print_results("brute force", shortest_routes_with_distance_brute_force)
+    system1, system2, distance = find_longest_jump(route)
+    print(f'Longest jump is {distance} LY between {system1["name"]} and {system2["name"]}')
+
+    # shortest_routes_with_distance_brute_force = calc_shortest_route_brute_force(systems)
+    # print_results("brute force", shortest_routes_with_distance_brute_force)
 
 
 if __name__ == "__main__":
@@ -136,6 +154,3 @@ if __name__ == "__main__":
     calc_bubble_run(MINOR_FACTION)
     # cProfile.run('calc_bubble_run(MINOR_FACTION)')
 
-# See:
-# 1. https://towardsdatascience.com/solving-travelling-salesperson-problems-with-python-5de7e883d847
-# 2. https://towardsdatascience.com/getting-started-with-randomized-optimization-in-python-f7df46babff0
