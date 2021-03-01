@@ -81,7 +81,7 @@ def remove_reverse_routes(routes: List[List[Dict]]) -> List[List[Dict]]:
     return result
 
 
-def calc_shortest_bubble_run_brute_force(head: Dict, systems: Iterable[Dict]):
+def calc_shortest_route(head: Dict, systems: Iterable[Dict]) -> Tuple[Dict, float]:
     shortest_route = None
     for route in permute(head, systems):
         distance = total_distance(route)
@@ -90,17 +90,21 @@ def calc_shortest_bubble_run_brute_force(head: Dict, systems: Iterable[Dict]):
     return shortest_route
 
 
+def calc_shortest_route_brute_force(systems: Iterable[Dict]) -> Tuple[Dict, float]:
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 1) as pool:
+        routes_with_distance = pool.map(functools.partial(calc_shortest_route, systems=systems), systems)
+    return functools.reduce(lambda x, y: x if x[1] < y[1] else y, routes_with_distance)
+
+
 def calc_bubble_run(minor_faction: str):
-    systems = get_local_minor_faction_systems(minor_faction)[:3:]  # Get first X systems as a test with systems[:X:]
+    systems = get_local_minor_faction_systems(minor_faction)[:4:]  # Get first X systems as a test with systems[:X:]
     # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
     #     permuted_routes = itertools.chain.from_iterable(pool.map(functools.partial(permute, items=systems), systems))
     #     permuted_forward_only_routes = remove_reverse_routes(permuted_routes)
     #     routes_with_distance = pool.map(add_distance_to_route, permuted_forward_only_routes)
     # sorted_routes_with_distance = sorted(routes_with_distance, key=lambda route: route[1])
 
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 1) as pool:
-        routes_with_distance = pool.map(functools.partial(calc_shortest_bubble_run_brute_force, systems=systems), systems)
-    shortest_routes_with_distance = functools.reduce(lambda x, y: x if x[1] < y[1] else y, routes_with_distance)
+    shortest_routes_with_distance = calc_shortest_route_brute_force(systems)
 
     # for route in sorted_routes_with_distance:
     #     print(f"{', '.join(route[0])}: {route[1]} LY")
