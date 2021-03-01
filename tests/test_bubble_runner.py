@@ -2,7 +2,7 @@ import pytest
 import math
 from typing import Tuple, List, Dict, Iterable
 
-from bubble_runner import calc_distance, permute, remove_reverse_routes, get_system_names, calc_shortest_route
+from bubble_runner import calc_distance, permute, remove_reverse_routes, get_system_names, calc_shortest_route, calc_distances
 
 
 @pytest.mark.parametrize(
@@ -89,3 +89,22 @@ def test_remove_reverse_routes(routes: List[Dict]):
 def test_calc_shortest_route(head: Dict, systems: Iterable[Dict], expected_shortest_route: Tuple[List[str], float]):
     systems, distance = calc_shortest_route(head, systems)
     assert (get_system_names(systems), distance) == expected_shortest_route
+
+
+@pytest.mark.parametrize(
+    "systems, expected_distances",
+    [
+        (
+            [
+                {"name": "Antai", "coords":{"x": 94.9375, "y": -44.65625, "z": -16.09375}},
+                {"name": "Wuy jugun", "coords":{"x": 116, "y": -41.875, "z": -12.09375}},
+                {"name": "Arun", "coords": {"x": 105.25, "y": -46.625, "z": -10.40625}}
+            ],
+            (
+                [(0, 1, 21.618609062853697), (0, 2, 11.940321983200453), (1, 0, 21.618609062853697), (1, 2, 11.873190651631937), (2, 0, 11.940321983200453), (2, 1, 11.873190651631937)]
+            )
+        )
+    ]
+)
+def test_calc_distances(systems: Iterable[Dict], expected_distances: Iterable[Tuple[int, int, float]]):
+    assert list(calc_distances(systems)) == expected_distances

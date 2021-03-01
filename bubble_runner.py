@@ -105,22 +105,30 @@ def calc_shortest_route_brute_force(systems: Iterable[Dict]) -> Tuple[Dict, floa
 def calc_distances(systems: Iterable[Dict]) -> Iterable[Tuple[int, int, float]]:
     for i in range(len(systems)):
         for j in range(len(systems)):
-            yield (i, j, calc_distance(
-                (system[i]["coords"]["x"], system[i]["coords"]["y"], system[i]["coords"]["x"]),
-                (system[j]["coords"]["x"], system[j]["coords"]["y"], system[j]["coords"]["x"])))
+            if i != j:
+                yield (i, j, calc_distance(
+                    (systems[i]["coords"]["x"], systems[i]["coords"]["y"], systems[i]["coords"]["z"]),
+                    (systems[j]["coords"]["x"], systems[j]["coords"]["y"], systems[j]["coords"]["z"])))
 
 
 def calc_shortest_route_mlrose(systems: Iterable[Dict]) -> Tuple[Dict, float]:
     fitness_distance = mlrose.TravellingSales(distances=calc_distances(systems))
     problem_fit = mlrose.TSPOpt(length=len(systems), fitness_fn=fitness_distance, maximize=False)
-    best_state, best_fitness = mlrose.genetic_alg(problem_fit, random_state=2)
-    return ([system[i] for index in best_state], best_fitness)
+    best_state, best_fitness = mlrose.genetic_alg(problem_fit, random_state=10)
+    return ([systems[index] for index in best_state], best_fitness)
+
+
+def print_results(description: str, route_with_distance: Tuple[List[Dict], float]):
+    print(f"{ description }: {' -> '.join(get_system_names(route_with_distance[0]))}: {route_with_distance[1]} LY")
 
 
 def calc_bubble_run(minor_faction: str):
-    systems = get_local_minor_faction_systems(minor_faction)[:4:]  # Get first X systems as a test with systems[:X:]
-    shortest_routes_with_distance = calc_shortest_route_mlrose(systems)
-    print(f"{' -> '.join(get_system_names(shortest_routes_with_distance[0]))}: {shortest_routes_with_distance[1]} LY")
+    systems = get_local_minor_faction_systems(minor_faction)[:3:]  # Get first X systems as a test with systems[:X:]
+    shortest_routes_with_distance_mlrose = calc_shortest_route_mlrose(systems)
+    print_results("mlrose", shortest_routes_with_distance_mlrose)
+
+    shortest_routes_with_distance_brute_force = calc_shortest_route_brute_force(systems)
+    print_results("brute force", shortest_routes_with_distance_brute_force)
 
 
 if __name__ == "__main__":
