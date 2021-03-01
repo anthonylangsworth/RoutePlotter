@@ -2,7 +2,7 @@ import pytest
 import math
 from typing import Tuple, List, Dict, Iterable
 
-from bubble_runner import calc_distance, permute, remove_reverse_routes, get_system_names, calc_shortest_bubble_run
+from bubble_runner import calc_distance, permute, remove_reverse_routes, get_system_names, calc_shortest_route
 
 
 @pytest.mark.parametrize(
@@ -86,5 +86,6 @@ def test_remove_reverse_routes(routes: List[Dict]):
         )
     ]
 )
-def test_calc_shortest_bubble_run(head: Dict, systems: Iterable[Dict], expected_shortest_route: Tuple[List[str], float]):
-    assert calc_shortest_bubble_run(head, systems) == expected_shortest_route
+def test_calc_shortest_route(head: Dict, systems: Iterable[Dict], expected_shortest_route: Tuple[List[str], float]):
+    systems, distance = calc_shortest_route(head, systems)
+    assert (get_system_names(systems), distance) == expected_shortest_route

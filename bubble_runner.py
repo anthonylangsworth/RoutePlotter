@@ -8,6 +8,12 @@ import multiprocessing
 import cProfile
 import functools
 
+import six
+import sys
+sys.modules['sklearn.externals.six'] = six
+import mlrose
+import numpy as np
+
 
 def get_all_systems() -> List:
     URL = "https://www.edsm.net/dump/systemsPopulated.json.gz"
@@ -96,9 +102,24 @@ def calc_shortest_route_brute_force(systems: Iterable[Dict]) -> Tuple[Dict, floa
     return functools.reduce(lambda x, y: x if x[1] < y[1] else y, routes_with_distance)
 
 
+def calc_distances(systems: Iterable[Dict]) -> Iterable[Tuple[int, int, float]]:
+    for i in range(len(systems)):
+        for j in range(len(systems)):
+            yield (i, j, calc_distance(
+                (system[i]["coords"]["x"], system[i]["coords"]["y"], system[i]["coords"]["x"]),
+                (system[j]["coords"]["x"], system[j]["coords"]["y"], system[j]["coords"]["x"])))
+
+
+def calc_shortest_route_mlrose(systems: Iterable[Dict]) -> Tuple[Dict, float]:
+    fitness_distance = mlrose.TravellingSales(distances=calc_distances(systems))
+    problem_fit = mlrose.TSPOpt(length=len(systems), fitness_fn=fitness_distance, maximize=False)
+    best_state, best_fitness = mlrose.genetic_alg(problem_fit, random_state=2)
+    return ([system[i] for index in best_state], best_fitness)
+
+
 def calc_bubble_run(minor_faction: str):
     systems = get_local_minor_faction_systems(minor_faction)[:4:]  # Get first X systems as a test with systems[:X:]
-    shortest_routes_with_distance = calc_shortest_route_brute_force(systems)
+    shortest_routes_with_distance = calc_shortest_route_mlrose(systems)
     print(f"{' -> '.join(get_system_names(shortest_routes_with_distance[0]))}: {shortest_routes_with_distance[1]} LY")
 
 
@@ -106,3 +127,7 @@ if __name__ == "__main__":
     MINOR_FACTION = "EDA Kunti League"
     calc_bubble_run(MINOR_FACTION)
     # cProfile.run('calc_bubble_run(MINOR_FACTION)')
+
+# See:
+# 1. https://towardsdatascience.com/solving-travelling-salesperson-problems-with-python-5de7e883d847
+# 2. https://towardsdatascience.com/getting-started-with-randomized-optimization-in-python-f7df46babff0
