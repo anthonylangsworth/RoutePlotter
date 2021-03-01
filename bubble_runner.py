@@ -111,7 +111,7 @@ def calc_distances(systems: Iterable[Dict]) -> Iterable[Tuple[int, int, float]]:
                     (systems[j]["coords"]["x"], systems[j]["coords"]["y"], systems[j]["coords"]["z"])))
 
 
-def calc_shortest_route_mlrose(systems: Iterable[Dict]) -> Tuple[Dict, float]:
+def calc_shortest_route_mlrose(systems: Iterable[Dict]) -> Tuple[List[Dict], float]:
     # See https://mlrose.readthedocs.io/en/stable/source/tutorial2.html#
     fitness_distances = mlrose.TravellingSales(distances=calc_distances(systems))
     problem_fit = mlrose.TSPOpt(length=len(systems), fitness_fn=fitness_distances, maximize=False)
