@@ -98,17 +98,7 @@ def calc_shortest_route_brute_force(systems: Iterable[Dict]) -> Tuple[Dict, floa
 
 def calc_bubble_run(minor_faction: str):
     systems = get_local_minor_faction_systems(minor_faction)[:4:]  # Get first X systems as a test with systems[:X:]
-    # with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-    #     permuted_routes = itertools.chain.from_iterable(pool.map(functools.partial(permute, items=systems), systems))
-    #     permuted_forward_only_routes = remove_reverse_routes(permuted_routes)
-    #     routes_with_distance = pool.map(add_distance_to_route, permuted_forward_only_routes)
-    # sorted_routes_with_distance = sorted(routes_with_distance, key=lambda route: route[1])
-
     shortest_routes_with_distance = calc_shortest_route_brute_force(systems)
-
-    # for route in sorted_routes_with_distance:
-    #     print(f"{', '.join(route[0])}: {route[1]} LY")
-
     print(f"{' -> '.join(get_system_names(shortest_routes_with_distance[0]))}: {shortest_routes_with_distance[1]} LY")
 
 
