@@ -2,7 +2,7 @@ import pytest
 import math
 from typing import Tuple, List, Dict, Iterable
 
-from bubble_runner import calc_distance, permute, remove_reverse_routes, get_system_names, calc_shortest_route, calc_distances
+from bubble_runner import calc_distance, permute, remove_reverse_routes, get_system_names, calc_shortest_route, calc_distances, get_local_minor_faction_systems
 
 
 @pytest.mark.parametrize(
@@ -13,8 +13,27 @@ from bubble_runner import calc_distance, permute, remove_reverse_routes, get_sys
         ((1, 1, 1), (0, 0, 0), math.sqrt(3))
     ]
 )
-def test_calc_distance(point1: Tuple[float, float, float], point2: Tuple[float, float, float], expected_distance: float):
+def test_calc_distance_basic(point1: Tuple[float, float, float], point2: Tuple[float, float, float], expected_distance: float):
     assert calc_distance(point1, point2) == expected_distance
+
+
+@pytest.mark.parametrize(
+    "system1_name, system2_name, expected_distance",
+    [
+        ("Herci", "LTT 2412", 34.64),
+        ("Herci", "Antai", 30.27), # Might be 30.30 in-game. Hmmm.
+        ("Antai", "Anukan", 14.61),
+        ("Antai", "Arun", 11.94),
+        ("Antai", "Wuy jugun", 21.62)
+    ]
+)
+def test_calc_distance_in_game(system1_name: Dict, system2_name: Dict, expected_distance: float):
+    systems = get_local_minor_faction_systems("EDA Kunti League")
+    system1 = next(system for system in systems if system["name"] == system1_name)
+    system2 = next(system for system in systems if system["name"] == system2_name)
+    assert round(calc_distance(
+        (system1["coords"]["x"], system1["coords"]["y"], system1["coords"]["z"]),
+        (system2["coords"]["x"], system2["coords"]["y"], system2["coords"]["z"])), 2) == expected_distance
 
 
 @pytest.mark.parametrize(
