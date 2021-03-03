@@ -1,5 +1,5 @@
 import requests
-from typing import List, Tuple, Dict, Iterable, Any
+from typing import List, Tuple, Dict, Iterable, Any, Callable
 import gzip
 import json
 import math
@@ -15,7 +15,7 @@ import mlrose
 import numpy as np
 
 
-def get_all_systems() -> List:
+def download_populated_systems() -> List:
     URL = "https://www.edsm.net/dump/systemsPopulated.json.gz"
     with requests.get(URL) as response:
         response.raise_for_status()
@@ -23,15 +23,19 @@ def get_all_systems() -> List:
         return json.loads(gzip.decompress(response.content))
 
 
-def get_local_systems() -> List:
+def get_populated_systems() -> Dict:
     with open("systemsPopulated.json", "r") as systems_populated:
         return json.loads(systems_populated.read())
 
 
-def get_systems(minor_faction: str) -> List:
-    return [row for row in get_local_systems()
-            if "factions" in row and any(
-                [faction["name"] for faction in row["factions"] if faction["name"] == minor_faction])]
+def get_systems(predicate: Callable[[Dict], bool]) -> iter:
+    for row in get_populated_systems():
+        if predicate(row):
+            yield row
+
+
+def matches_minor_faction(minor_faction: str, row: Dict) -> bool:
+    return "factions" in row and any([faction["name"] == minor_faction for faction in row["factions"]])
 
 
 def get_local_minor_faction_systems(minor_faction: str) -> List:
@@ -39,7 +43,7 @@ def get_local_minor_faction_systems(minor_faction: str) -> List:
         return json.loads(systems_with_minor_faction.read())
 
 
-def write_systems(minor_faction: str, systems: List) -> None:
+def write_systems(minor_faction: str, systems: List[Dict]) -> None:
     with open(f"{minor_faction}.json", "w") as file:
         file.write(json.dumps(systems, indent=4))
 
@@ -138,7 +142,8 @@ def find_longest_jump(route: List[Dict]) -> Tuple[Dict, Dict, float]:
 
 
 def calc_bubble_run(minor_faction: str):
-    systems = get_local_minor_faction_systems(minor_faction)  # Get first X systems as a test with systems[:X:]
+    # systems = get_local_minor_faction_systems(minor_faction)  # Get first X systems as a test with systems[:X:]
+    systems = list(get_systems(functools.partial(matches_minor_faction, minor_faction)))
     route, distance = calc_shortest_route_mlrose(systems)
     print_results("mlrose", route, distance)
 
