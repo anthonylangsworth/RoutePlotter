@@ -10,7 +10,7 @@ import functools
 
 import six
 import sys
-sys.modules['sklearn.externals.six'] = six
+sys.modules['sklearn.externals.six'] = six  # Fix mlrose module loading issue
 import mlrose
 import numpy as np
 
