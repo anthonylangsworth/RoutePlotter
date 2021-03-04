@@ -154,7 +154,7 @@ def calc_bubble_run(minor_faction: str):
     description = "Community Goal"
     systems_to_visit = ("Ethgreze", "Lave", "Irukama", "Karsuki Ti", "Goman")
     systems = list(get_systems(lambda x: x["name"] in systems_to_visit))
-    assert len(systems) == len(systems_to_visit)
+    assert len(systems) == len(systems_to_visit)  # Ensure names are correct
 
     route, distance = calc_shortest_route_mlrose(systems)
     print_results(description, route, distance)
