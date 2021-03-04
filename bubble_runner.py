@@ -162,8 +162,8 @@ def calc_bubble_run(minor_faction: str):
     system1, system2, distance = find_longest_jump(route)
     print(f'Longest jump is {distance} LY between {system1["name"]} and {system2["name"]}')
 
-    # shortest_routes_with_distance_brute_force = calc_shortest_route_brute_force(systems)
-    # print_results("brute force", shortest_routes_with_distance_brute_force)
+    # route, distance = calc_shortest_route_brute_force(systems)
+    # print_results(f"{ description } via brute force", route, distance)
 
 
 if __name__ == "__main__":
