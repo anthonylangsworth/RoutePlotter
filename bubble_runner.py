@@ -142,10 +142,22 @@ def find_longest_jump(route: List[Dict]) -> Tuple[Dict, Dict, float]:
 
 
 def calc_bubble_run(minor_faction: str):
+    # Load from already filtered list of "EDA Kunti League" factions. Fastest.
+    # description = "EDA Bubble Run"
     # systems = get_local_minor_faction_systems(minor_faction)  # Get first X systems as a test with systems[:X:]
-    systems = list(get_systems(functools.partial(matches_minor_faction, minor_faction)))
+
+    # Apply predicate to broader list to calculate bubble run.
+    # description = "EDA Bubble Run"
+    # systems = list(get_systems(functools.partial(matches_minor_faction, minor_faction)))
+
+    # Most recent community goal to purchase rare commodities
+    description = "Community Goal"
+    systems_to_visit = ("Ethgreze", "Lave", "Irukama", "Karsuki Ti", "Goman")
+    systems = list(get_systems(lambda x: x["name"] in systems_to_visit))
+    assert len(systems) == len(systems_to_visit)
+
     route, distance = calc_shortest_route_mlrose(systems)
-    print_results("mlrose", route, distance)
+    print_results(description, route, distance)
 
     system1, system2, distance = find_longest_jump(route)
     print(f'Longest jump is {distance} LY between {system1["name"]} and {system2["name"]}')
