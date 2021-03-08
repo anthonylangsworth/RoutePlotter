@@ -14,6 +14,9 @@ sys.modules['sklearn.externals.six'] = six  # Fix mlrose module loading issue
 import mlrose
 import numpy as np
 
+# To download systemsPopulated.json (in a Un*x prompt):
+# wget https://www.edsm.net/dump/systemsPopulated.json.gz
+# gunzip systemsPopulated.json.gz
 
 def download_populated_systems() -> List:
     URL = "https://www.edsm.net/dump/systemsPopulated.json.gz"
