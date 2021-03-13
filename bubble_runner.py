@@ -127,7 +127,7 @@ def calc_shortest_route_mlrose(systems: Iterable[Dict]) -> Tuple[List[Dict], flo
 
 
 def print_results(description: str, route: List[Dict], distance: float):
-    print(f"{ description }: {' -> '.join(get_system_names(route))}: {distance} LY")
+    print(f"{ description }: {' -> '.join(get_system_names(route))}: {distance:.2f} LY")
 
 
 def find_longest_jump(route: List[Dict]) -> Tuple[Dict, Dict, float]:
@@ -163,7 +163,7 @@ def calc_bubble_run(minor_faction: str):
     print_results(description, route, distance)
 
     system1, system2, distance = find_longest_jump(route)
-    print(f'Longest jump is {distance} LY between {system1["name"]} and {system2["name"]}')
+    print(f'Longest jump is {distance:.2f} LY between {system1["name"]} and {system2["name"]}')
 
     # route, distance = calc_shortest_route_brute_force(systems)
     # print_results(f"{ description } via brute force", route, distance)
