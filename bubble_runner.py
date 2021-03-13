@@ -150,7 +150,7 @@ def calc_bubble_run(minor_faction: str):
     # systems = get_local_minor_faction_systems(minor_faction)  # Get first X systems as a test with systems[:X:]
 
     # Apply predicate to broader list to calculate bubble run.
-    description = "EDA Bubble Run"
+    description = f'Visit all systems with { minor_faction } presence ("bubble run")'
     systems = list(get_systems(functools.partial(matches_minor_faction, minor_faction)))
 
     # Most recent community goal to purchase rare commodities
