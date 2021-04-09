@@ -38,7 +38,7 @@ def get_systems(predicate: Callable[[Dict], bool]) -> iter:
 
 
 def matches_minor_faction(minor_faction: str, row: Dict) -> bool:
-    return "factions" in row and any([faction["name"] == minor_faction for faction in row["factions"]])
+    return "factions" in row and any([faction["name"] == minor_faction and faction["influence"] > 0 for faction in row["factions"]])
 
 
 def get_local_minor_faction_systems(minor_faction: str) -> List:
