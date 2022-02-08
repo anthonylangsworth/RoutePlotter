@@ -5,20 +5,19 @@ import json
 import math
 import itertools
 import multiprocessing
-import cProfile
+# import cProfile
 import functools
 
 import six
 import sys
 sys.modules['sklearn.externals.six'] = six  # Fix mlrose module loading issue
-import mlrose
-import numpy as np
+import mlrose  # noqa: E402
 
-# To download systemsPopulated.json (in a Un*x prompt):
-# wget https://www.edsm.net/dump/systemsPopulated.json.gz
-# gunzip systemsPopulated.json.gz
 
 def download_populated_systems() -> List:
+    # To download systemsPopulated.json (in a Un*x prompt):
+    # wget https://www.edsm.net/dump/systemsPopulated.json.gz
+    # gunzip systemsPopulated.json.gz
     URL = "https://www.edsm.net/dump/systemsPopulated.json.gz"
     with requests.get(URL) as response:
         response.raise_for_status()
@@ -173,4 +172,3 @@ if __name__ == "__main__":
     MINOR_FACTION = "EDA Kunti League"
     calc_bubble_run(MINOR_FACTION)
     # cProfile.run('calc_bubble_run(MINOR_FACTION)')
-
