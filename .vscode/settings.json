@@ -4,7 +4,7 @@
         "-vv"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
-    "python.pythonPath": "C:\\Users\\antho\\AppData\\Local\\Programs\\Python\\Python39\\python.exe"
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true
 }
