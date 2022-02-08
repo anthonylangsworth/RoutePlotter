@@ -1,7 +1,4 @@
-import requests
-from typing import List, Tuple, Dict, Iterable, Any, Callable
-import gzip
-import json
+from typing import List, Tuple, Dict, Iterable, Any
 import math
 import itertools
 import multiprocessing
@@ -13,41 +10,7 @@ import sys
 sys.modules['sklearn.externals.six'] = six  # Fix mlrose module loading issue
 import mlrose  # noqa: E402
 
-
-def download_populated_systems() -> List:
-    # To download systemsPopulated.json (in a Un*x prompt):
-    # wget https://www.edsm.net/dump/systemsPopulated.json.gz
-    # gunzip systemsPopulated.json.gz
-    URL = "https://www.edsm.net/dump/systemsPopulated.json.gz"
-    with requests.get(URL) as response:
-        response.raise_for_status()
-        # TODO: Use a streamed version to save memory
-        return json.loads(gzip.decompress(response.content))
-
-
-def get_populated_systems() -> Dict:
-    with open("systemsPopulated.json", "r") as systems_populated:
-        return json.loads(systems_populated.read())
-
-
-def get_systems(predicate: Callable[[Dict], bool]) -> iter:
-    for row in get_populated_systems():
-        if predicate(row):
-            yield row
-
-
-def matches_minor_faction(minor_faction: str, row: Dict) -> bool:
-    return "factions" in row and any([faction["name"] == minor_faction and faction["influence"] > 0 for faction in row["factions"]])
-
-
-def get_local_minor_faction_systems(minor_faction: str) -> List:
-    with open(f"{minor_faction}.json", "r") as systems_with_minor_faction:
-        return json.loads(systems_with_minor_faction.read())
-
-
-def write_systems(minor_faction: str, systems: List[Dict]) -> None:
-    with open(f"{minor_faction}.json", "w") as file:
-        file.write(json.dumps(systems, indent=4))
+import star_systems  # noqa: E402
 
 
 def calc_distance(point1: Tuple[float, float, float], point2: Tuple[float, float, float]) -> float:
@@ -150,12 +113,12 @@ def calc_bubble_run(minor_faction: str):
 
     # Apply predicate to broader list to calculate bubble run.
     description = f'Visit all systems with { minor_faction } presence ("bubble run")'
-    systems = list(get_systems(functools.partial(matches_minor_faction, minor_faction)))
+    systems = list(star_systems.get_systems(functools.partial(star_systems.matches_minor_faction, minor_faction)))
 
     # Most recent community goal to purchase rare commodities
     # description = "Community Goal"
     # systems_to_visit = ("Ethgreze", "Lave", "Irukama", "Karsuki Ti", "Goman")
-    # systems = list(get_systems(lambda x: x["name"] in systems_to_visit))
+    # systems = list(star_systems.get_systems(lambda x: x["name"] in systems_to_visit))
     # assert len(systems) == len(systems_to_visit)  # Ensure names are correct
 
     route, distance = calc_shortest_route_mlrose(systems)
