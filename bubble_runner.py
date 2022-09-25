@@ -133,5 +133,6 @@ def calc_bubble_run(minor_faction: str):
 
 if __name__ == "__main__":
     MINOR_FACTION = "EDA Kunti League"
+    # MINOR_FACTION = "Society Of Greybeards"
     calc_bubble_run(MINOR_FACTION)
     # cProfile.run('calc_bubble_run(MINOR_FACTION)')
