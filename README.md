@@ -10,7 +10,7 @@ This problem is a traditional "travelling salesman" problem, solved using a gene
 
 In a Linux prompt (using [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) on Windows):
 1. Download the files, such as by a `git clone` of this repository's URL.
-2. Navigate to the folder containing the files from this project.
+2. Navigate to the folder containing the files from this repository.
 3. Run `pip install -r requirements.txt` to download dependencies. This only needs to be run the first time. After that, the dependences are present.
 4. Run `wget https://www.edsm.net/dump/systemsPopulated.json.gz` to download the latest data on populated star systems from [EDSM](https://edsm.net).
 5. Run `gunzip systemsPopulated.json.gz` to decompress the downloaded file.
