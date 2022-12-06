@@ -1,9 +1,21 @@
-# Introduction
+# Route Plotter
 
-This was originally meant to be the seed of another EDMC plug-in. The plug-in's initial task was to download the star systems with a given minor faction's presence then determine the shortest route.
+## Introduction
 
-It soon become clear that, for any non-trivial number of star systems (n > 5), this would take too long. There are also other potential uses for a tool that can plot the shortest route between stars, such as community goals.
+A small python program that calculates the shortest route to visit all star systems were a minor faction in the **Elite Dangerous** galaxy is present. Visiting each system when running a tool like [Elite Dangerous Market Connector (EDMC)](https://edcodex.info/?m=tools&entry=150) ensures the data in third-party tools like [Inara](https://inara.cz/elite/news/), [EDSM](https://edsm.net) and [elitebgs.app](https://elitebgs.app/) are up-to-date.
 
-Therefore, the focus moved from creating an EDMC plug-in to plotting routes between stars in the most efficient way. It was also a good opportunity to large about Python's multiprocessing library and optimizations (e.g. using iterators and a string lookup in a `set` instead of a `list` lookup in a `list`).
+This problem is a traditional "travelling salesman" problem, solved using a genetic algorithm with the [MLROSE](https://mlrose.readthedocs.io/en/stable/) library.
 
-A better solution was to use a genetic algorithm, e.g. mlrose. This approximated the output very quickly and is now generalized in the code.
+## Use
+
+1. In a Linux prompt (using [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) on Windows), run the following to download the latest data on populated systems from [EDSM](https://edsm.net):
+    1. `wget https://www.edsm.net/dump/systemsPopulated.json.gz` to download the latest data.
+    2. `gunzip systemsPopulated.json.gz` to decompress it.
+3. (Optional) Change the name of the minor faction in `MINOR_FACTION` around line 135.
+4. Run `python bubble_runner.py`. It outputs the following to the console:
+    1. The route. Start at any system then follow the jump sequence.
+    2. The longest jump required. This helps ensure your ship can do each step in one jump. 
+
+## License
+
+See [LICENSE](LICENSE).
