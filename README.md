@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**Route Plotter** is a small python program that calculates the shortest route to visit all star systems were a minor faction in the **Elite Dangerous** galaxy is present. Visiting each system when running a tool like [Elite Dangerous Market Connector (EDMC)](https://edcodex.info/?m=tools&entry=150) ensures the data in third-party tools like [Inara](https://inara.cz/elite/news/), [EDSM](https://edsm.net) and [elitebgs.app](https://elitebgs.app/) are up-to-date. This helps players supporting a minor faction determine whether work is required to support, protect or expand their minor faction.
+**Route Plotter** is a small python program that calculates the shortest route to visit all star systems were a minor faction in the **Elite Dangerous** galaxy is present. Visiting each system in-game while running a tool like [Elite Dangerous Market Connector (EDMC)](https://edcodex.info/?m=tools&entry=150) ensures the data in third-party tools like [Inara](https://inara.cz/elite/news/), [EDSM](https://edsm.net) and [elitebgs.app](https://elitebgs.app/) are up-to-date. This helps players supporting a minor faction determine whether work is required to support, protect or expand their minor faction.
 
 This problem is a traditional "travelling salesman" problem, solved using a genetic algorithm with the [MLROSE](https://mlrose.readthedocs.io/en/stable/) library.
 
