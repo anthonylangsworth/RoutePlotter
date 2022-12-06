@@ -9,11 +9,13 @@ This problem is a traditional "travelling salesman" problem, solved using a gene
 ## Use
 
 In a Linux prompt (using [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) on Windows):
-1. Navigate to the folder containing the files from this project.
-2. Run `wget https://www.edsm.net/dump/systemsPopulated.json.gz` to download the latest data on populated star systems from [EDSM](https://edsm.net).
-3. Run `gunzip systemsPopulated.json.gz` to decompress the downloaded file.
-4. (Optional) Change the name of the minor faction in `MINOR_FACTION` around line 135. It defaults to my minor faction but yours is likely different.
-5. Run `python bubble_runner.py`. It outputs the following to the console:
+1. Download the files, such as by a `git clone` of this repository's URL.
+2. Navigate to the folder containing the files from this project.
+3. Run `pip install -r requirements.txt` to download dependencies. This only needs to be run the first time. After that, the dependences are present.
+4. Run `wget https://www.edsm.net/dump/systemsPopulated.json.gz` to download the latest data on populated star systems from [EDSM](https://edsm.net).
+5. Run `gunzip systemsPopulated.json.gz` to decompress the downloaded file.
+6. (Optional) Change the name of the minor faction in `MINOR_FACTION` around line 135. It defaults to my minor faction but yours is likely different.
+7. Run `python bubble_runner.py`. It outputs the following to the console:
     1. The route. Start at any system then follow the jump sequence.
     2. The longest jump required. A ship that can jump at least this far can do the route in a single jump per step. 
 
