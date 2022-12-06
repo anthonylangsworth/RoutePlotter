@@ -16,8 +16,9 @@ In a Linux prompt (using [Windows Subsystem for Linux (WSL)](https://learn.micro
 5. Run `gunzip systemsPopulated.json.gz` to decompress the downloaded file. Run this whenever you run the previous step to download new data on populated systems.
 6. (Optional) Change the name of the minor faction in `MINOR_FACTION` around line 135. It defaults to my minor faction but yours is likely different. This only needs to be changed once.
 7. Run `python bubble_runner.py`. It outputs the following to the console:
-    1. The route. Start at any system then follow the jump sequence.
-    2. The longest jump required. A ship that can jump at least this far can do the route in a single jump per step. 
+    1. The route. Start at any system then follow the jump sequence. Once you reach the end, jump to the first system and continue until you reach the star system you started at.
+    2. The total distance in light years (LY). This is a rough measure of how spread out your minor faction is.
+    3. The longest jump required. A ship that can jump at least this far can do the route in a single jump per step. 
 
 ## License
 
